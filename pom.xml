@@ -16,8 +16,8 @@
     <artifactId>Connexia</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Connexia</name>
-    <description>Connexia</description>
+    <name>PowerBoot</name>
+    <description>powerboot</description>
 
     <modules>
         <module>UserMicroService</module>
