@@ -106,8 +106,18 @@ services:
       - db
     restart: unless-stopped
 
+  zipkin:
+    container_name: zipkin2
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - zipkin
+
 networks:
   db:
+    driver: bridge
+  zipkin:
     driver: bridge
 
 volumes:

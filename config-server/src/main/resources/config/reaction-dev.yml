@@ -24,3 +24,8 @@ eureka:
     register-with-eureka: true
 
 debug: true
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
