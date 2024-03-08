@@ -1,5 +1,6 @@
 package com.simplon.NotificationService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -77,6 +79,7 @@ public class NotificationController {
         }
     }
 
+    @CircuitBreaker(name ="getNotification", fallbackMethod = "getDefaultNotification")
     @GetMapping("/{id}")
     public ResponseEntity<NotificationDTO> getNotificationById(@PathVariable Long id) {
         try {
@@ -142,5 +145,27 @@ public class NotificationController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    public ResponseEntity getDefaultNotification(Long id, Throwable throwable) {
+        return ResponseEntity.ok().body(new NotificationDTO(
+                id,
+                "Une erreur s'est produite : " + throwable.getMessage(),
+                "Erreur",
+                false,
+                null,
+                null,
+                LocalDateTime.now()
+        ));
+    }
 
+//    public NotificationDTO getDefaultNotifications(Exception e){
+//        return new NotificationDTO(
+//                null,
+//                "Une erreur s'est produite : " + e.getMessage(),
+//                "Erreur",
+//                false,
+//                null,
+//                null,
+//                LocalDateTime.now()
+//        );
+//    }
 }

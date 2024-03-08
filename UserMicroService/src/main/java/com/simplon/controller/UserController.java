@@ -2,6 +2,7 @@ package com.simplon.controller;
 
 import com.simplon.model.dto.UserDto;
 import com.simplon.service.UserService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,10 +70,16 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @CircuitBreaker(name="Friend_Service", fallbackMethod = "getDefaultAcceptedFriends")
     @GetMapping("/friends")
     public ResponseEntity<String> getAllacceptedFriends() {
         logger.info("Fetching all accepted friends");
         String friends = userService.getAllacceptedFriends();
         return new ResponseEntity<>(friends, HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> getDefaultAcceptedFriends(Exception e){
+        return new ResponseEntity<String>("Friends service is down", HttpStatus.OK);
+
     }
 }
